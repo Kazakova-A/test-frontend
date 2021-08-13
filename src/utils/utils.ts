@@ -28,9 +28,9 @@ export const MOCK_DATA: Data[] = [
   {
     id: 2,
     title: {
-      en: 'English',
-      germ: 'Germany',
-      bulg: 'Bulgarian',
+      en: 'English 2',
+      germ: 'Germany 2',
+      bulg: 'Bulgarian 2',
 
     },
     content: {
@@ -55,9 +55,9 @@ export const MOCK_DATA: Data[] = [
   {
     id: 3,
     title: {
-      en: 'English',
-      germ: 'Germany',
-      bulg: 'Bulgarian',
+      en: 'English 3',
+      germ: 'Germany 3',
+      bulg: 'Bulgarian 3',
 
     },
     content: {

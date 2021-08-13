@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, {
   memo,
   useEffect,
   useContext,
   useMemo,
 } from 'react';
-import {
-  useParams,
-  Link,
-  useHistory,
-  useLocation,
-} from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import Pagination from 'react-bootstrap/Pagination';
 
 import { Params } from '../../routes/utils';
 import { Languages, Data } from '../../utils/utils';
@@ -38,7 +33,20 @@ const Article = (): JSX.Element => {
   const itemIndex = useMemo(() => (
     articles.findIndex((item: Data) => item.id === currentArticle?.id)
   ), [articles, currentArticle?.id]);
-  console.log('itemIndex', itemIndex);
+
+  const nextRecorId = articles[itemIndex + 1]?.id || null;
+  const prevRecorId = articles[itemIndex - 1]?.id || null;
+  const isPrevButtonDisabled = itemIndex === 0;
+  const isNextButtonDisabled = itemIndex === articles.length - 1;
+
+  const goNext = () => {
+    history.replace(`${ROUTES.article}/${selectedLanguage}/${nextRecorId as number}`);
+  };
+
+  const goPrev = () => {
+    history.replace(`${ROUTES.article}/${selectedLanguage}/${prevRecorId as number}`);
+  };
+
   const onSelectChange = (event: React.ChangeEvent<{ value: string }>) => {
     const { value } = event.target;
     changeLanguage(value as Languages);
@@ -76,6 +84,12 @@ const Article = (): JSX.Element => {
             </Link>
           </span>
         </div>
+      </div>
+      <div>
+        <Pagination>
+          <Pagination.Prev onClick={goPrev} disabled={isPrevButtonDisabled} />
+          <Pagination.Next onClick={goNext} disabled={isNextButtonDisabled} />
+        </Pagination>
       </div>
     </Wrapper>
   );
