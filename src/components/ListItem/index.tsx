@@ -3,8 +3,7 @@ import { ListGroup } from 'react-bootstrap';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
-import { Data } from '../../context';
-import { Languages } from '../../utils/utils';
+import { Languages, Data } from '../../utils/utils';
 import { ROUTES } from '../../routes/constants';
 
 import './list-item.css';
