@@ -10,7 +10,7 @@ import { ROUTE } from './routes';
 const RouterMap: React.FC = () => (
   <BrowserRouter>
     <Switch>
-      {ROUTE.map((route): React.ReactNode => <Route key={route.path} {...route} />)}
+      {ROUTE.map((route): React.ReactNode => <Route exact key={route.path} {...route} />)}
     </Switch>
   </BrowserRouter>
 );
