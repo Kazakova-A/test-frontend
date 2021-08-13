@@ -12,8 +12,8 @@ export interface Data {
     germ: string;
     bulg: string;
   },
-  data: string;
+  date: number;
   isActive: boolean;
 }
 
-export const NewsContext = React.createContext<Data[] | null>(null);
+export const ArticlesContext = React.createContext<Data[] | null>(null);
