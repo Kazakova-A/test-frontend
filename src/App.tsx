@@ -29,7 +29,7 @@ const App = () => {
 
   useEffect(() => {
     const newsList = localStorage.getItem('articles');
-    const data = (newsList ? JSON.parse(newsList) : null) as Data[];
+    const data = (newsList ? JSON.parse(newsList) : []) as Data[];
 
     setArticles(data);
   }, []);

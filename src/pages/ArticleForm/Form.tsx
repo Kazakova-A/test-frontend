@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useContext,
   useEffect,
+  useRef,
 } from 'react';
 import {
   Form,
@@ -11,10 +12,10 @@ import {
   Col,
   Button,
 } from 'react-bootstrap';
-import { Editor, TextTools } from 'react-bootstrap-editor';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useHistory } from 'react-router-dom';
+import JoditEditor from 'jodit-react';
 
 import { ArticlesContext, Context } from '../../context';
 import { Data, Languages } from '../../utils/utils';
@@ -32,11 +33,11 @@ const FormComponent = ({
   lang,
 }: FormProps): JSX.Element => {
   const history = useHistory();
+  const editor = useRef(null);
   const [articleTitle, setTilte] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [checkboxState, setCheckboxState] = useState<boolean>(true);
   const [date, setDate] = useState<Date>(new Date());
-
   const {
     addArticle,
     editArticle,
@@ -74,7 +75,6 @@ const FormComponent = ({
       date: date.getTime() / 1000,
       isActive: checkboxState,
     };
-
     addArticle(payload);
     history.push(ROUTES.articles);
   };
@@ -131,10 +131,10 @@ const FormComponent = ({
           </span>
         </Form.Label>
         <Col sm="10">
-          <Editor
-            tools={TextTools}
+          <JoditEditor
+            ref={editor}
             value={content}
-            onChange={(value) => setContent(value)}
+            onBlur={(newContent) => setContent(newContent)}
           />
         </Col>
       </Form.Group>
