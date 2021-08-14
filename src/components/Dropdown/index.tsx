@@ -1,20 +1,8 @@
 import React, { memo } from 'react';
 import { Form } from 'react-bootstrap';
 
+import { SELECT_VALUES } from '../../utils/utils';
 import './dropdown.css';
-
-const SELECT_VALUES = [{
-  key: 'en',
-  title: 'English',
-},
-{
-  key: 'germ',
-  title: 'Germany',
-},
-{
-  key: 'bulg',
-  title: 'Bulgarian',
-}];
 
 interface DropdownProps {
   selected: string;

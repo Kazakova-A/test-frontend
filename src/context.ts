@@ -8,6 +8,8 @@ export interface Context {
   setCurrentArticle: (id: number) => void;
   selectedLanguage: Languages;
   changeLanguage: (value: Languages) => void;
+  addArticle: (item: Data) => void;
+  editArticle: (item: Data) => void;
 }
 
 export const ArticlesContext = React.createContext<Context | null>(null);

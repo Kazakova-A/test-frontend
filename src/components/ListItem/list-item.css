@@ -5,6 +5,7 @@
 
 .list-item__link:hover,
 .list-item__content:hover {
+  text-decoration: none;
   color: unset;
 }
 

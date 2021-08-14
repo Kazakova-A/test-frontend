@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { memo } from 'react';
 import {
   Container,
   Row,
   Col,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import Dropdown from '../Dropdown';
+import { ROUTES } from '../../routes/constants';
 
 interface WrapperProps {
   lang: string;
@@ -16,11 +17,22 @@ interface WrapperProps {
 
 const Wrapper = ({ lang, onChange, children }: WrapperProps): JSX.Element => (
   <Container className="p-5">
-    <Row>
+    <Row className="align-items-center">
       <Col
         className="p-3"
-        xs={{ span: 4, offset: 8 }}
-        xl={{ span: 3, offset: 9 }}
+        xs={{ span: 8 }}
+        xl={{ span: 9 }}
+      >
+        <Link to={`/${ROUTES.admin}/${lang}/${ROUTES.article}/${ROUTES.addArticle}`}>
+          <span>
+            Add article
+          </span>
+        </Link>
+      </Col>
+      <Col
+        className="p-3"
+        xs={{ span: 4 }}
+        xl={{ span: 3 }}
       >
         <Dropdown
           selected={lang}
