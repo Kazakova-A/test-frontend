@@ -44,8 +44,8 @@ const FormComponent = ({
 
   const isDisabled = useMemo(() => (
     !articleTitle.trim()
-      || !content.trim()
-      || !date
+    || !content.trim()
+    || !date
   ), [articleTitle, content, date]);
 
   useEffect(() => {

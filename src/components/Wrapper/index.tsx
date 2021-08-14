@@ -4,7 +4,7 @@ import {
   Row,
   Col,
 } from 'react-bootstrap';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Dropdown from '../Dropdown';
 import { ROUTES } from '../../routes/constants';

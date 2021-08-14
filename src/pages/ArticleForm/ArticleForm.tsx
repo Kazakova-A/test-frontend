@@ -23,7 +23,7 @@ import FormComponent from './Form';
 import './form.css';
 
 interface ArticleFormParams {
-  id? :string;
+  id?: string;
   lang: Languages;
 }
 
