@@ -1,15 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   memo,
   useEffect,
   useContext,
   useMemo,
+  useState,
+  useCallback,
 } from 'react';
 import {
-  Container,
-  Row,
-  Col,
-  Tabs,
-  Tab,
+  Container, Row, Col, Tabs, Tab,
 } from 'react-bootstrap';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,11 +20,7 @@ import { ROUTES } from '../../routes/constants';
 
 import FormComponent from './Form';
 import './form.css';
-
-interface ArticleFormParams {
-  id?: string;
-  lang: Languages;
-}
+import { ArticleFormParams, InputValues } from './types';
 
 const ArticleForm = (): JSX.Element => {
   const history = useHistory();
@@ -35,18 +30,53 @@ const ArticleForm = (): JSX.Element => {
     setCurrentArticle,
     selectedLanguage,
     changeLanguage,
-  } = (useContext<Context | null>(ArticlesContext)) as Context;
+  } = useContext<Context | null>(ArticlesContext) as Context;
 
-  const isEdit = useMemo(() => history.location.pathname.includes(ROUTES.editArticle), [history.location.pathname]);
-  const title = useMemo(() => (
-    (id && currentArticle) ? `Edit Article: ${currentArticle.title[selectedLanguage]}` : 'Add Article'
-  ), [currentArticle, id, selectedLanguage]);
+  const [articleTitle, setArticleTilte] = useState<InputValues>({
+    [Languages.english]: '',
+    [Languages.germany]: '',
+    [Languages.bulgarian]: '',
+  });
 
-  useEffect(() => {
-    if (id) {
-      setCurrentArticle(Number(id));
-    }
-  }, [id, setCurrentArticle]);
+  const [content, setContent] = useState<InputValues>({
+    [Languages.english]: '',
+    [Languages.germany]: '',
+    [Languages.bulgarian]: '',
+  });
+  const [date, setDate] = useState<Date>(new Date());
+  const [isActive, setIsActive] = useState<boolean>(true);
+
+  const isDisabled = useMemo(
+    () => !articleTitle[selectedLanguage].trim()
+      || !content[selectedLanguage].trim()
+      || !date,
+    [articleTitle, content, date, selectedLanguage],
+  );
+
+  const handleTitleChange = useCallback((value: string) => {
+    setArticleTilte({
+      ...articleTitle,
+      [selectedLanguage]: value,
+    });
+  }, [articleTitle, selectedLanguage]);
+
+  const handleContentChange = useCallback((value: string) => {
+    setContent({
+      ...content,
+      [selectedLanguage]: value,
+    });
+  }, [content, selectedLanguage]);
+
+  const isEdit = useMemo(
+    () => history.location.pathname.includes(ROUTES.editArticle),
+    [history.location.pathname],
+  );
+  const title = useMemo(
+    () => (id && currentArticle
+      ? `Edit Article: ${currentArticle.title[selectedLanguage]}`
+      : 'Add Article'),
+    [currentArticle, id, selectedLanguage],
+  );
 
   const onSelectChange = (eventKey: Languages) => {
     changeLanguage(eventKey);
@@ -56,24 +86,34 @@ const ArticleForm = (): JSX.Element => {
     history.replace(redirect);
   };
 
+  useEffect(() => {
+    if (id) {
+      setCurrentArticle(Number(id));
+    }
+  }, [id, setCurrentArticle]);
+
+  useEffect(() => {
+    if (isEdit && currentArticle) {
+      handleTitleChange(currentArticle.title[selectedLanguage]);
+      handleContentChange(currentArticle.content[selectedLanguage]);
+      setDate(new Date(currentArticle.date * 1000));
+      setIsActive(currentArticle.isActive);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, selectedLanguage, currentArticle]);
+
   return (
     <Container className="p-5">
       <Row>
-        <Col
-          xs={{ span: 5, offset: 0 }}
-          className="p-3"
-        >
-          <h2 className="form-title">
-            {title}
-          </h2>
+        <Col xs={{ span: 5, offset: 0 }} className="p-3">
+          <h2 className="form-title">{title}</h2>
         </Col>
       </Row>
       <Row>
         <Col>
           <Tabs
             onSelect={(eventKey) => onSelectChange(eventKey as Languages)}
-            defaultActiveKey="profile"
-            id="uncontrolled-tab-example"
+            defaultActiveKey={selectedLanguage}
             className="mb-3"
             activeKey={selectedLanguage}
           >
@@ -81,8 +121,14 @@ const ArticleForm = (): JSX.Element => {
               <Tab key={item.key} eventKey={item.key} title={item.title}>
                 <FormComponent
                   isEdit={isEdit}
-                  record={currentArticle}
-                  lang={selectedLanguage}
+                  articleTitle={articleTitle}
+                  content={content}
+                  isActive={isActive}
+                  date={date}
+                  handleTitleChange={handleTitleChange}
+                  handleContentChange={handleContentChange}
+                  handleDateChange={setDate}
+                  handleCheckboxChange={setIsActive}
                 />
               </Tab>
             ))}
@@ -92,9 +138,7 @@ const ArticleForm = (): JSX.Element => {
       <Row>
         <Link to={ROUTES.articles}>
           <FontAwesomeIcon icon={faArrowLeft} />
-          <span>
-            Back to the listing
-          </span>
+          <span>Back to the listing</span>
         </Link>
       </Row>
     </Container>

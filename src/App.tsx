@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import RouterMap from './routes/router';
 import { ArticlesContext } from './context';
-import { Languages, Data } from './utils/utils';
+import { Languages, Data, MOCK_DATA } from './utils/utils';
 
 const App = () => {
   const [articles, setArticles] = useState<Data[]>([]);
@@ -29,7 +29,8 @@ const App = () => {
 
   useEffect(() => {
     const newsList = localStorage.getItem('articles');
-    const data = (newsList ? JSON.parse(newsList) : []) as Data[];
+
+    const data = (newsList?.length ? JSON.parse(newsList) : MOCK_DATA) as Data[];
 
     setArticles(data);
   }, []);

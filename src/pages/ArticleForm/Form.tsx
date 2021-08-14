@@ -1,103 +1,84 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, {
   memo,
   useState,
   useMemo,
   useContext,
   useEffect,
-  useRef,
 } from 'react';
 import {
-  Form,
-  Row,
-  Col,
-  Button,
+  Form, Row, Col, Button,
 } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useHistory } from 'react-router-dom';
-import JoditEditor from 'jodit-react';
+import { Editor, TextTools } from 'react-bootstrap-editor';
 
 import { ArticlesContext, Context } from '../../context';
 import { Data, Languages } from '../../utils/utils';
 import { ROUTES } from '../../routes/constants';
-
-interface FormProps {
-  isEdit?: boolean;
-  record?: Data | null;
-  lang: Languages;
-}
+import { FormProps } from './types';
+// interface FormProps {
+//   isEdit?: boolean;
+//   record?: Data | null;
+//   lang: Languages;
+// }
 
 const FormComponent = ({
-  isEdit = false,
-  record = null,
-  lang,
+  // isEdit = false,
+  // record = null,
+  // lang,
+  isEdit,
+  articleTitle,
+  content,
+  isActive,
+  date,
+  handleTitleChange,
+  handleContentChange,
+  handleDateChange,
+  handleCheckboxChange,
 }: FormProps): JSX.Element => {
   const history = useHistory();
-  const editor = useRef(null);
-  const [articleTitle, setTilte] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [checkboxState, setCheckboxState] = useState<boolean>(true);
-  const [date, setDate] = useState<Date>(new Date());
   const {
     addArticle,
     editArticle,
-  } = (useContext<Context | null>(ArticlesContext)) as Context;
+    selectedLanguage,
+    currentArticle,
+  } = useContext<Context | null>(ArticlesContext) as Context;
 
   const isDisabled = useMemo(() => (
-    !articleTitle.trim()
-    || !content.trim()
+    !articleTitle[selectedLanguage].trim()
+    || !content[selectedLanguage].trim()
     || !date
-  ), [articleTitle, content, date]);
+  ), [articleTitle, content, date, selectedLanguage]);
 
-  useEffect(() => {
-    if (isEdit && record) {
-      setTilte(record.title[lang]);
-      setCheckboxState(record.isActive);
-      setContent(record.content[lang]);
-      setDate(new Date(record.date * 1000));
-    }
-  }, [isEdit, lang, record]);
-
-  const addNewArticle = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const addNewArticle = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     event.preventDefault();
     const payload = {
       id: Math.random(),
-      title: {
-        en: lang === Languages.english ? articleTitle : '',
-        germ: lang === Languages.germany ? articleTitle : '',
-        bulg: lang === Languages.bulgarian ? articleTitle : '',
-      },
-      content: {
-        en: lang === Languages.english ? content : '',
-        germ: lang === Languages.germany ? content : '',
-        bulg: lang === Languages.bulgarian ? content : '',
-      },
+      title: articleTitle,
+      content,
       date: date.getTime() / 1000,
-      isActive: checkboxState,
+      isActive,
     };
     addArticle(payload);
     history.push(ROUTES.articles);
   };
 
-  const editArticleRecord = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const editArticleRecord = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     event.preventDefault();
-    if (record) {
+    if (currentArticle) {
       const payload = {
-        id: record.id,
-        title: {
-          en: lang === Languages.english ? articleTitle : record.title[Languages.english],
-          germ: lang === Languages.germany ? articleTitle : record.title[Languages.germany],
-          bulg: lang === Languages.bulgarian ? articleTitle : record.title[Languages.bulgarian],
-        },
-        content: {
-          en: lang === Languages.english ? content : record.content[Languages.english],
-          germ: lang === Languages.germany ? content : record.content[Languages.germany],
-          bulg: lang === Languages.bulgarian ? content : record.content[Languages.bulgarian],
-        },
+        id: currentArticle.id,
+        title: articleTitle,
+        content,
         date: date.getTime() / 1000,
-        isActive: checkboxState,
+        isActive,
       };
-
       editArticle(payload);
       history.push(ROUTES.articles);
     }
@@ -118,8 +99,8 @@ const FormComponent = ({
           <Form.Control
             type="text"
             placeholder="Title"
-            value={articleTitle}
-            onChange={(e) => setTilte(e.target.value)}
+            value={articleTitle[selectedLanguage]}
+            onChange={(e) => handleTitleChange(e.target.value)}
           />
         </Col>
       </Form.Group>
@@ -131,10 +112,10 @@ const FormComponent = ({
           </span>
         </Form.Label>
         <Col sm="10">
-          <JoditEditor
-            ref={editor}
-            value={content}
-            onBlur={(newContent) => setContent(newContent)}
+          <Editor
+            tools={TextTools}
+            value={content[selectedLanguage]}
+            onChange={(newContent) => handleContentChange(newContent)}
           />
         </Col>
       </Form.Group>
@@ -148,7 +129,7 @@ const FormComponent = ({
         <Col sm="10">
           <DatePicker
             selected={date}
-            onChange={(value) => setDate(value as Date)}
+            onChange={(value) => handleDateChange(value as Date)}
             minDate={new Date()}
           />
         </Col>
@@ -157,8 +138,8 @@ const FormComponent = ({
         <Col xs={{ offset: 2 }}>
           <Form.Check
             label="isActive"
-            checked={checkboxState}
-            onChange={() => setCheckboxState(!checkboxState)}
+            checked={isActive}
+            onChange={() => handleCheckboxChange(!isActive)}
           />
         </Col>
       </Form.Group>
@@ -166,9 +147,11 @@ const FormComponent = ({
         <Col xs={{ offset: 2 }}>
           <Button
             variant="outline-primary"
-            disabled={isDisabled}
             type="submit"
-            onClick={(e) => buttonHandler(e as React.MouseEvent<HTMLButtonElement, MouseEvent>)}
+            disabled={isDisabled}
+            onClick={(e) => buttonHandler(
+              e as React.MouseEvent<HTMLButtonElement, MouseEvent>,
+            )}
           >
             Ok
           </Button>
