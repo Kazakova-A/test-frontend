@@ -81,7 +81,24 @@ export const MOCK_DATA: Data[] = [
   },
 ];
 
-export type Languages = 'en' | 'germ' | 'bulg';
+export enum Languages {
+  english = 'en',
+  germany = 'germ',
+  bulgarian = 'bulg',
+}
+
+export const SELECT_VALUES = [{
+  key: Languages.english,
+  title: 'English',
+},
+{
+  key: Languages.germany,
+  title: 'Germany',
+},
+{
+  key: Languages.bulgarian,
+  title: 'Bulgarian',
+}];
 
 export interface Data {
   id: number;

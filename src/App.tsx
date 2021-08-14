@@ -2,15 +2,24 @@ import React, { useState, useEffect } from 'react';
 
 import RouterMap from './routes/router';
 import { ArticlesContext } from './context';
-import { MOCK_DATA, Languages, Data } from './utils/utils';
+import { Languages, Data } from './utils/utils';
 
 const App = () => {
   const [articles, setArticles] = useState<Data[]>([]);
   const [article, setArticle] = useState<Data | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<Languages>('en');
+  const [selectedLanguage, setSelectedLanguage] = useState<Languages>(Languages.english);
 
   const changeLanguage = (value: Languages) => {
     setSelectedLanguage(value);
+  };
+
+  const addArticle = (item: Data) => {
+    setArticles([...articles, item]);
+  };
+
+  const editArticle = (item: Data) => {
+    const updatedArr = articles.map((object: Data) => (item.id === object.id ? { ...item } : object));
+    setArticles(updatedArr);
   };
 
   const setCurrentArticle = (id: number) => {
@@ -19,9 +28,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    // adding some mocked articles
-    localStorage.setItem('articles', JSON.stringify(MOCK_DATA));
-
     const newsList = localStorage.getItem('articles');
     const data = (newsList ? JSON.parse(newsList) : null) as Data[];
 
@@ -39,6 +45,8 @@ const App = () => {
       selectedLanguage,
       changeLanguage,
       setCurrentArticle,
+      addArticle,
+      editArticle,
     }}
     >
       <RouterMap />

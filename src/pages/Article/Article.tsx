@@ -7,8 +7,9 @@ import React, {
 import { useParams, Link, useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import Pagination from 'react-bootstrap/Pagination';
+import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Pagination } from 'react-bootstrap';
+import parser from 'html-react-parser';
 
 import { Params } from '../../routes/utils';
 import { Languages, Data } from '../../utils/utils';
@@ -40,17 +41,17 @@ const Article = (): JSX.Element => {
   const isNextButtonDisabled = itemIndex === articles.length - 1;
 
   const goNext = () => {
-    history.replace(`${ROUTES.article}/${selectedLanguage}/${nextRecorId as number}`);
+    history.replace(`/${selectedLanguage}/${ROUTES.article}/${nextRecorId as number}`);
   };
 
   const goPrev = () => {
-    history.replace(`${ROUTES.article}/${selectedLanguage}/${prevRecorId as number}`);
+    history.replace(`/${selectedLanguage}/${ROUTES.article}/${prevRecorId as number}`);
   };
 
   const onSelectChange = (event: React.ChangeEvent<{ value: string }>) => {
     const { value } = event.target;
     changeLanguage(value as Languages);
-    history.replace(`${ROUTES.article}/${value}/${id.toString()}`);
+    history.replace(`/${value}/${ROUTES.article}/${id}`);
   };
 
   useEffect(() => {
@@ -66,11 +67,16 @@ const Article = (): JSX.Element => {
     >
       <h2 className="article-subtitle">Article details</h2>
       <div className="article-detail">
-        <h5 className="article-detail__title">
-          {currentArticle?.title[selectedLanguage]}
-        </h5>
+        <div>
+          <h5 className="article-detail__title">
+            {currentArticle?.title[selectedLanguage]}
+          </h5>
+          <Link to={`/${ROUTES.admin}/${selectedLanguage}/${ROUTES.article}/${ROUTES.editArticle}/${id}`}>
+            <FontAwesomeIcon icon={faEdit} />
+          </Link>
+        </div>
         <div className="article-detail__content">
-          {currentArticle?.content[selectedLanguage]}
+          {parser(currentArticle?.content[selectedLanguage] || '')}
         </div>
         <p className="list-item__date">{parseDate}</p>
         <div className="article-footer">
