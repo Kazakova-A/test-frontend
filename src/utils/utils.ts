@@ -1,5 +1,3 @@
-import { Data } from '../context';
-
 export const MOCK_DATA: Data[] = [
   {
     id: 1,
@@ -7,7 +5,6 @@ export const MOCK_DATA: Data[] = [
       en: 'English',
       germ: 'Germany',
       bulg: 'Bulgarian',
-
     },
     content: {
       en: `
@@ -31,9 +28,9 @@ export const MOCK_DATA: Data[] = [
   {
     id: 2,
     title: {
-      en: 'English',
-      germ: 'Germany',
-      bulg: 'Bulgarian',
+      en: 'English 2',
+      germ: 'Germany 2',
+      bulg: 'Bulgarian 2',
 
     },
     content: {
@@ -58,9 +55,9 @@ export const MOCK_DATA: Data[] = [
   {
     id: 3,
     title: {
-      en: 'English',
-      germ: 'Germany',
-      bulg: 'Bulgarian',
+      en: 'English 3',
+      germ: 'Germany 3',
+      bulg: 'Bulgarian 3',
 
     },
     content: {
@@ -85,3 +82,19 @@ export const MOCK_DATA: Data[] = [
 ];
 
 export type Languages = 'en' | 'germ' | 'bulg';
+
+export interface Data {
+  id: number;
+  title: {
+    en: string;
+    germ: string;
+    bulg: string;
+  },
+  content: {
+    en: string;
+    germ: string;
+    bulg: string;
+  },
+  date: number;
+  isActive: boolean;
+}

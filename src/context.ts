@@ -1,19 +1,13 @@
 import React from 'react';
 
-export interface Data {
-  id: number;
-  title: {
-    en: string,
-    germ: string;
-    bulg: string;
-  },
-  content: {
-    en: string;
-    germ: string;
-    bulg: string;
-  },
-  date: number;
-  isActive: boolean;
+import { Languages, Data } from './utils/utils';
+
+export interface Context {
+  articles: Data[];
+  currentArticle: Data | null;
+  setCurrentArticle: (id: number) => void;
+  selectedLanguage: Languages;
+  changeLanguage: (value: Languages) => void;
 }
 
-export const ArticlesContext = React.createContext<Data[] | null>(null);
+export const ArticlesContext = React.createContext<Context | null>(null);

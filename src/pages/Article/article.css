@@ -1,0 +1,30 @@
+.article-subtitle {
+  text-align: center;
+  font-weight: 300;
+  color: #505050;
+  margin-bottom: 30px;
+}
+
+.article-detail__title {
+  color: cornflowerblue;
+  text-align: center;
+}
+
+.article-detail__content {
+  font-size: 16px;
+  color: #3a3939;
+  margin-bottom: 15px;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.divider {
+  width: 200px;
+  flex-grow: 1;
+  background-color: #505050;
+  height: 1px;
+}
